@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+html {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    /*@apply text-*/
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+input, input:focus, input:active {
+    /*color: #f8f8f6;*/
+    outline: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+*:focus {
+    outline-width: 0;
+}
+
+progress{
+    @apply appearance-none;
+}
+progress::-webkit-progress-bar {
+    @apply overflow-hidden rounded-full bg-gray-200;
+}
+progress::-webkit-progress-value {
+    @apply bg-blue-500;
+}
+
+.container {
+    @apply max-w-screen-2xl mx-auto;
+}

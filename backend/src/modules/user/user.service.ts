@@ -5,6 +5,8 @@ import { User } from '../../entities/user.entity';
 import { CreateAccountDto } from './dtos/createAccount.dto';
 import * as bcrypt from 'bcrypt';
 import { CoreOutput } from '../../common/dtos/coreOutput.dto';
+import * as Validator from 'class-validator';
+import { UserDataOutput } from './dtos/userData.dto';
 
 /** 실질적인 서비스 구현 */
 @Injectable()
@@ -40,6 +42,38 @@ export class UserService {
       return { success: false, error: '계정생성에 실패했습니다.' };
     }
   }
+  async validate(email: string, password: string): Promise<UserDataOutput> {
+    try {
+      let user: User = null;
+      //이메일 유효성 검사
+      if (Validator.isEmail(email) && email.length >= 6) {
+        user = await this.userRepository
+          .createQueryBuilder() //이 후에 SQL쿼리언어처럼 DB에서 데이터조회 가능
+          .select('*') //쿼리빌더 이후로 지정해준 쿼리같은 메소드
+          .where('email = :email', { email: email }) //조회조건
+          .getRawOne(); //Raw통째로 가져온다. 유효성이 검증되면 user를 반환하고, user = 해당유저의 데이터이다.(email,password,id,token 등등)
+      } else {
+        return {
+          success: false,
+          error: '잘못된 로그인 아이디입니다.',
+        };
+      }
+
+      if (user && bcrypt.compareSync(password, user.password)) {
+        console.log('인증 성공');
+        return {
+          success: true,
+          user,
+        };
+      }
+      return {
+        success: false,
+        error: '비밀번호 검증 실패.',
+      };
+    } catch (error) {
+      return { success: false, error: '로그인 검증 실패.' };
+    }
+  }
   /** 모든유저정보 */
   async getAll(): Promise<User[]> {
     return this.userRepository.find();
@@ -51,6 +85,9 @@ export class UserService {
       throw new NotFoundException('존재하지 않는 ID입니다.');
     }
     return get;
+  }
+  async findById(id: number): Promise<User> {
+    return await this.userRepository.findOneByOrFail({ id });
   }
   /** id 삭제 */
   async delete(userId: number): Promise<CoreOutput> {

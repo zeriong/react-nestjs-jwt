@@ -10,10 +10,17 @@ import {
 import { UserService } from './user.service';
 import { User } from '../../entities/user.entity';
 import { CoreOutput } from '../../common/dtos/coreOutput.dto';
+import { CreateAccountDto } from './dtos/createAccount.dto';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Post('test')
+  test() {
+    return 'test';
+  }
+
   /** 유저데이터 전체 검색 */
   @Get('all')
   getAll(): Promise<User[]> {
@@ -25,13 +32,13 @@ export class UserController {
     return this.userService.getAcc(id);
   }
   /** 유저데이터 생성 */
-  @Post('resister')
-  createAccount(@Body() input) {
+  @Post('register')
+  createAccount(@Body() input: CreateAccountDto): Promise<CoreOutput> {
     return this.userService.createAccount(input);
   }
   /** id로 유저데이터 삭제 */
   @Delete(':id')
-  delete(@Param('id') id: number): Promise<CoreOutput> {
+  async delete(@Param('id') id: number): Promise<CoreOutput> {
     return this.userService.delete(id);
   }
   /** 유저데이터 수정 */

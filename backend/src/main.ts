@@ -12,7 +12,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: `http://localhost:${process.env.PORT}`,
+    origin: 'http://localhost:3000',
     credentials: true,
   });
 

@@ -18,4 +18,8 @@ export class User extends coreEntity {
   /** mobile */
   @Column({ length: 16, comment: '휴대폰변호' })
   mobile: string;
+
+  /** refreshToken */
+  @Column({ nullable: true })
+  refreshToken?: string;
 }
