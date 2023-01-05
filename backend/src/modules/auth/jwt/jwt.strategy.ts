@@ -21,9 +21,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: AccessPayload): Promise<User | null> {
+    console.log('JwtStrategy: 접근');
     let user = null;
     try {
       user = this.usersService.findById(payload.sub);
+      console.log('JwtStrategy: 결과', user);
     } catch (e) {
       console.log('JwtStrategy: 오류 - 1');
       throw new UnauthorizedException();

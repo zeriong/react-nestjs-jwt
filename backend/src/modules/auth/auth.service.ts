@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { Request, Response } from 'express';
+//import { Request, Response } from '@nestjs/common';
 
 import { User } from '../../entities/user.entity';
 
@@ -25,11 +26,7 @@ export class AuthService {
   ) {}
 
   /** 로그인 */
-  async login(
-    { email, password }: LoginInput,
-    req: Request,
-    res: Response,
-  ): Promise<LoginOutput> {
+  async login({ email, password }: LoginInput, response: Response): Promise<LoginOutput> {
     try {
       // 계정, 비밀번호 검증
       const validateUser: UserDataOutput = await this.userService.validate(
@@ -64,10 +61,10 @@ export class AuthService {
             expiresIn: this.config.get('JWT_REFRESH_TOKEN_EXPIRATION'),
           }),
         ];
-        //console.log('Token: ', accessToken, refreshToken);
+        console.log('Token: ', accessToken, refreshToken);
 
         // refreshToken 쿠키 저장
-        res.cookie('rt', refreshToken, {
+        response.cookie('rt', refreshToken, {
           path: '/',
           httpOnly: true,
           sameSite: 'strict',
@@ -81,7 +78,7 @@ export class AuthService {
           validateUser.user,
         );*/
 
-        const userProfile: UserProfile = validateUser.user;
+        //const userProfile: UserProfile = validateUser.user;
 
         return {
           success: true,
@@ -100,9 +97,11 @@ export class AuthService {
   /** accessToken 재발급 */
   async refreshToken(user: User, req: Request): Promise<AccessTokenOutput> {
     try {
+      console.log('refreshToken: 스탭 1-1:', user);
       // refreshToken 쿠키에서 받아오기
       const refreshToken = req.cookies['rt'];
       // accessToken 발행 조건 검사
+      console.log('refreshToken: 스탭 2');
       if (
         !refreshToken ||
         !user ||
@@ -112,6 +111,7 @@ export class AuthService {
         console.log('refreshToken: 검증 불일치 오류');
         new UnauthorizedException();
       }
+      console.log('refreshToken: 스탭 3');
       // accessToken 토큰 재생성
       const accessPayload: AccessPayload = {
         sub: user.id,

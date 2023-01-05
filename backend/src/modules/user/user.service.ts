@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { CoreOutput } from '../../common/dtos/coreOutput.dto';
 import * as Validator from 'class-validator';
 import { UserDataOutput } from './dtos/userData.dto';
+import { UserProfile } from "./types/userProfile.type";
 
 /** 실질적인 서비스 구현 */
 @Injectable()
@@ -79,15 +80,12 @@ export class UserService {
     return this.userRepository.find();
   }
   /** id 검색 */
-  async getAcc(userId: number) {
-    const get = await this.userRepository.findOne({ where: { id: userId } });
-    if (!get) {
-      throw new NotFoundException('존재하지 않는 ID입니다.');
-    }
-    return get;
-  }
   async findById(id: number): Promise<User> {
     return await this.userRepository.findOneByOrFail({ id });
+  }
+  /** 프로필 response */
+  async profile(id: number): Promise<User> {
+    return await this.userRepository.findOneBy({ id });
   }
   /** id 삭제 */
   async delete(userId: number): Promise<CoreOutput> {
