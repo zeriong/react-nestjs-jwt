@@ -11,3 +11,9 @@ export const setCookie = (name: string, val: string) => {
 export const deleteCookie = (name: string) => {
     document.cookie = name+"=; max-age=0;";
 }
+
+export const existToken = () => {
+    if (getCookie('rt')) {
+        console.log(String(getCookie('rt')))
+    } else { console.log(null); }
+}

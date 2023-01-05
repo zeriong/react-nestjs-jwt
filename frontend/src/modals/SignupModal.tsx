@@ -16,8 +16,8 @@ export const SignupModal = () => {
 
     /** 쿼리를 이용한 모달 팝업 컨트롤 */
     const [searchParams, setSearchParams] = useSearchParams();
-    const [isShow, setIsShow] = useState(true);
-    const { registAxios } = useAxios();
+    const [isShow, setIsShow] = useState(false);
+    const axios = useAxios();
 
     let closeModal = () => {
         if (searchParams.get("modal") === "sign-up") {
@@ -51,9 +51,23 @@ export const SignupModal = () => {
     //const navigate = useNavigate();
 
     /** submit */
-    const onSubmit = handleSubmit(() => {
+    const onSubmit = handleSubmit(async () => {
         const {email,password,name,mobile} = getValues();
-        registAxios(email,password,name,mobile);
+        await axios.post(
+            '/user/register',
+            {
+                "email": email,
+                "password": password,
+                "name": name,
+                "mobile": mobile,
+                "refreshToken": "",
+            },)
+            .then((res) => {
+                console.log(res.data);
+            })
+            .catch((e) => {
+                console.log(e);
+            });
     });
     return (
         <>
@@ -172,10 +186,6 @@ export const SignupModal = () => {
                                             </p>
                                         </div>
                                         <button className="border-8 border-sky-300 bg-sky-200">회원가입</button>
-                                        <button type="button" className="border-8 border-sky-300 bg-sky-200" onClick={() => {
-                                            const {passwordConfirm, ...data} = getValues();
-                                            console.log(data);
-                                        }}>테스트</button>
                                     </form>
                                 </Dialog.Panel>
                             </Transition.Child>

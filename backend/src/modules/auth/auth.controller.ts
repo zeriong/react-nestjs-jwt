@@ -1,12 +1,10 @@
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { AuthService } from './auth.service';
 import { AccessTokenOutput } from './dtos/token.dto';
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { CoreOutput } from '../../common/dtos/coreOutput.dto';
-import { Request, Response } from 'express';
-//import { JwtRefreshAuthGuard } from './guards/jwtRefreshAuth.guard';
-//import { UseGuards } from '@nestjs/common';
-//import { JwtAuthGuard } from './guards/jwtAuth.guard';
+import { Response } from 'express';
+import { JwtRefreshAuthGuard } from './guards/jwtRefreshAuth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -15,15 +13,14 @@ export class AuthController {
   @Post('login')
   async login(
     @Body() input: LoginInput,
-    @Req() req: Request,
-    @Res() res: Response,
+    @Res({ passthrough: true }) response: Response,
   ): Promise<LoginOutput> {
-    return this.authService.login(input, req, res);
+    return this.authService.login(input, response);
   }
 
   @Post('refresh')
+  @UseGuards(JwtRefreshAuthGuard)
   async refreshToken(@Req() req): Promise<AccessTokenOutput> {
-    console.log('refreshToken: 접근');
     return this.authService.refreshToken(req.user, req);
   }
 
