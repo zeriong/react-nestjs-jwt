@@ -5,6 +5,7 @@ import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { CoreOutput } from '../../common/dtos/coreOutput.dto';
 import { Response } from 'express';
 import { JwtRefreshAuthGuard } from './guards/jwtRefreshAuth.guard';
+import { JwtAuthGuard } from './guards/jwtAuth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -25,6 +26,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @UseGuards(JwtAuthGuard)
   async logout(@Req() req, @Res() res): Promise<CoreOutput> {
     console.log('logout: 접근');
     return this.authService.logout(req.user, res);

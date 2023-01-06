@@ -1,7 +1,7 @@
 import React from 'react';
 import {configureStore} from '@reduxjs/toolkit';
-import tokenReducer from "./slices/auth";
-import userReducer from "./slices/userInfo";
+import tokenReducer from "./slices/token.slice";
+import userReducer from "./slices/profile.slice";
 
 export const store = configureStore({
     reducer: {
@@ -11,3 +11,4 @@ export const store = configureStore({
 });
 
 export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
