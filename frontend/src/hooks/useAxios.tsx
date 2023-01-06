@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { useEffect } from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
-import {DELETE_TOKEN, SET_TOKEN} from "../store/slices/auth";
+import {DELETE_TOKEN, SET_TOKEN} from "../store/slices/token.slice";
 import {useNavigate} from "react-router-dom";
 
 
@@ -73,7 +73,7 @@ export const useAxios = () => {
                 } catch (_error) { // ***토큰발급 실패, 로그인정보 초기화 및 로그인창 이동
                     console.log('에러1')
                     dispatch(DELETE_TOKEN())
-                    navigate("/home");
+                    navigate("/");
                     return Promise.reject(_error);
                 }
             }

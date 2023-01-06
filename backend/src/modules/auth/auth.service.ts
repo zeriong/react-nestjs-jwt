@@ -129,14 +129,18 @@ export class AuthService {
   /** 로그아웃 */
   async logout(user: User, res: Response): Promise<CoreOutput> {
     try {
+      console.log('접근1');
       // refreshToken 쿠키 삭제 (maxAge = 쿠키유지기한)
       res.cookie('rt', '', { maxAge: 0 });
+      console.log('쿠키삭제2');
       // refreshToken 디비 삭제
       await this.userService.update(user.id, {
         refreshToken: null,
       });
+      console.log('접근3');
       return { success: true };
     } catch (e) {
+      console.log('실패');
       return { success: false, error: '계정 생성에 실패하였습니다.' };
     }
   }

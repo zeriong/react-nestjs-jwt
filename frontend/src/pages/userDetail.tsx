@@ -1,6 +1,6 @@
 import React from "react";
 import {useSelector} from "react-redux";
-import {userState} from "../store/slices/userInfo";
+import {userState} from "../store/slices/profile.slice";
 import {RootState} from "../store";
 
 export const UserDetail = () => {
