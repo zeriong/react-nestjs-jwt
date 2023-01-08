@@ -14,6 +14,7 @@ import { User } from '../../entities/user.entity';
 import { CoreOutput } from '../../common/dtos/coreOutput.dto';
 import { CreateAccountDto } from './dtos/createAccount.dto';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
+import { UpdateAccountDto } from './dtos/updateAccount.dto';
 
 @Controller('user')
 export class UserController {
@@ -31,8 +32,15 @@ export class UserController {
     return this.userService.createAccount(input);
   }
 
+  /** 유저데이터 수정 */
+  @Patch('modify')
+  @UseGuards(JwtAuthGuard)
+  update(@Req() req, @Body() updateData: object): Promise<CoreOutput> {
+    return this.userService.update(req.user.id, updateData);
+  }
+
   /** 프로필 response */
-  @Post('profile')
+  @Get('profile')
   @UseGuards(JwtAuthGuard)
   async profile(@Req() req): Promise<User> {
     return await this.userService.profile(req.user.id);
@@ -42,13 +50,5 @@ export class UserController {
   @Delete(':id')
   async delete(@Param('id') id: number): Promise<CoreOutput> {
     return this.userService.delete(id);
-  }
-  /** 유저데이터 수정 */
-  @Patch(':id')
-  update(
-    @Param('id') id: number,
-    @Body() updateData: object,
-  ): Promise<CoreOutput> {
-    return this.userService.update(id, updateData);
   }
 }

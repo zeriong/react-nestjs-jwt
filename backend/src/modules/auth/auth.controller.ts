@@ -1,7 +1,7 @@
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { AuthService } from './auth.service';
 import { AccessTokenOutput } from './dtos/token.dto';
-import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { CoreOutput } from '../../common/dtos/coreOutput.dto';
 import { Response } from 'express';
 import { JwtRefreshAuthGuard } from './guards/jwtRefreshAuth.guard';
@@ -19,15 +19,15 @@ export class AuthController {
     return this.authService.login(input, response);
   }
 
-  @Post('refresh')
+  @Get('refresh')
   @UseGuards(JwtRefreshAuthGuard)
   async refreshToken(@Req() req): Promise<AccessTokenOutput> {
     return this.authService.refreshToken(req.user, req);
   }
 
-  @Post('logout')
+  @Get('logout')
   @UseGuards(JwtAuthGuard)
-  async logout(@Req() req, @Res() res): Promise<CoreOutput> {
+  async logout(@Req() req, @Res({ passthrough: true }) res: Response): Promise<CoreOutput> {
     console.log('logout: 접근');
     return this.authService.logout(req.user, res);
   }
