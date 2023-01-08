@@ -1,12 +1,12 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {SignupModal} from "../modals/SignupModal";
-import {useAxios} from "../hooks/useAxios";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../store";
-import {SET_TOKEN} from "../store/slices/token.slice";
-import {SET_USER, setProfile} from "../store/slices/profile.slice";
-import {Link, useNavigate, useSearchParams} from "react-router-dom";
+import {AppDispatch, RootState} from "../store";
+import {sendMyProfile, SET_USER} from "../store/slices/user.slice";
+import {Link, useSearchParams} from "react-router-dom";
+import {Api} from "../utile/api";
+import {sendLogout, SET_LOGIN} from "../store/slices/auth.slice";
 
 type FormData = {
     email: string;
@@ -24,8 +24,7 @@ export const Home = ()=> {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [PwShow, setPwShow] = useState(false);
-    const axios = useAxios();
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     /** 쿼리세팅 */
     const setRouterQuery = (key: string, value:string) => {
@@ -34,24 +33,28 @@ export const Home = ()=> {
     };
 
     /** state management */
-    const dispatch = useDispatch();
-    const tokenState = useSelector((state: RootState) => (state.token.accessToken));
+    const dispatch = useDispatch<AppDispatch>();
+    const isLoggedIn = useSelector((state: RootState) => (state.auth.data.isLoggedIn));
     const userState = useSelector((state: RootState) => (state.user));
 
-    console.log('userState', userState)
+    useEffect(() => {
+        if (isLoggedIn) {
+            dispatch(sendMyProfile());
+        }
+    }, [])
 
     /** submit */
     const onSubmit = handleSubmit(async () => {
         const {email,password} = getValues();
-        await axios.post(
+        await Api().post(
             '/auth/login',
             {
                 email, password,
             },)
             .then((res) => {
                 console.log(res.data);
-                console.log(tokenState);
-                dispatch(SET_TOKEN(res.data.accessToken));
+                console.log(isLoggedIn);
+                dispatch(SET_LOGIN(res.data.accessToken));
                 dispatch(SET_USER(res.data.user));
 
             })
@@ -70,11 +73,20 @@ export const Home = ()=> {
                      "
                 >
                     {
-                        tokenState ? (
+                        isLoggedIn ? (
                             <div className="flex flex-col">
-                                <div className='text-2xl font-extrabold text-gray-600'>{`${userState.info.name}님 ㅎㅇ`}</div>
-                                <Link to={'/userDetail'} className="border-8 border-sky-300 bg-sky-200 mt-3" >마이페이지</Link>
-                                <button className="border-8 border-sky-300 bg-sky-200 mt-3" >로그아웃(테스트)</button>
+                                <div className='text-2xl font-extrabold text-gray-600'>{`${userState.data.name}님 ㅎㅇ`}</div>
+                                <Link to={'/profile'} className="border-8 border-sky-300 bg-sky-200 mt-3" >마이페이지</Link>
+                                <button
+                                    type="button"
+                                    className="border-8 border-sky-300 bg-sky-200 mt-3"
+                                    onClick={() => {
+                                        console.log('클릭!')
+                                        dispatch(sendLogout())
+                                    }}
+                                >
+                                    로그아웃
+                                </button>
                             </div>
                         ) : (
                             <div>
@@ -88,6 +100,7 @@ export const Home = ()=> {
                                         <input
                                             className="border border-gray-400 rounded px-2 py-1 w-full"
                                             type="text"
+                                            id="email"
                                             placeholder="이메일을 입력해주세요."
                                             {...register("email", {
                                                 required: true,
@@ -105,6 +118,7 @@ export const Home = ()=> {
                                             className="border border-gray-400 rounded px-2 py-1 w-full"
                                             {...register("password", { required: true,  minLength: 8, maxLength: 100 })}
                                             type={ PwShow ? "text" : "password" }
+                                            id="password"
                                             placeholder="비밀번호를 입력해주세요."
                                         />
                                         <div className="flex justify-between">

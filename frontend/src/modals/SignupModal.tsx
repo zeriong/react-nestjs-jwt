@@ -1,8 +1,8 @@
 import React, {Fragment, useEffect, useState} from "react";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 import {useForm} from "react-hook-form";
 import {Dialog, Transition } from "@headlessui/react";
-import {useAxios} from "../hooks/useAxios";
+import {Api} from "../utile/api";
 /** 폼항목 */
 type FormData = {
     name: string;
@@ -17,7 +17,6 @@ export const SignupModal = () => {
     /** 쿼리를 이용한 모달 팝업 컨트롤 */
     const [searchParams, setSearchParams] = useSearchParams();
     const [isShow, setIsShow] = useState(false);
-    const axios = useAxios();
 
     let closeModal = () => {
         if (searchParams.get("modal") === "sign-up") {
@@ -53,7 +52,7 @@ export const SignupModal = () => {
     /** submit */
     const onSubmit = handleSubmit(async () => {
         const {email,password,name,mobile} = getValues();
-        await axios.post(
+        await Api().post(
             '/user/register',
             {
                 "email": email,
