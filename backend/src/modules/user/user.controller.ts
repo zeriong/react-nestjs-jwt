@@ -35,8 +35,8 @@ export class UserController {
   /** 유저데이터 수정 */
   @Patch('modify')
   @UseGuards(JwtAuthGuard)
-  update(@Req() req, @Body() updateData: object): Promise<CoreOutput> {
-    return this.userService.update(req.user.id, updateData);
+  profileUpdate(@Req() req, @Body() updateData: UpdateAccountDto): Promise<CoreOutput> {
+    return this.userService.profileUpdate(req.user.id, updateData);
   }
 
   /** 프로필 response */

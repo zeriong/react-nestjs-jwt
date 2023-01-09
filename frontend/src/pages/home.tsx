@@ -6,7 +6,7 @@ import {AppDispatch, RootState} from "../store";
 import {sendMyProfile, SET_USER} from "../store/slices/user.slice";
 import {Link, useSearchParams} from "react-router-dom";
 import {Api} from "../utile/api";
-import {sendLogout, SET_LOGIN} from "../store/slices/auth.slice";
+import {sendLogout, SET_LOGIN, SET_LOGOUT} from "../store/slices/auth.slice";
 
 type FormData = {
     email: string;
@@ -54,9 +54,10 @@ export const Home = ()=> {
             .then((res) => {
                 console.log(res.data);
                 console.log(isLoggedIn);
-                dispatch(SET_LOGIN(res.data.accessToken));
-                dispatch(SET_USER(res.data.user));
-
+                if (res.data.success) {
+                    dispatch(SET_LOGIN(res.data.accessToken));
+                    dispatch(SET_USER(res.data.user));
+                } else {dispatch(SET_LOGOUT());}
             })
             .catch((e) => {
                 console.log(e);

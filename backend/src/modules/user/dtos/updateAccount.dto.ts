@@ -11,7 +11,7 @@ export class UpdateAccountDto {
     message: '비밀번호는 최소 8자 이상이어야 합니다.',
   })
   @Validator.IsString()
-  password: string;
+  password?: string;
 
   /** name */
   @Validator.Length(2, 30, { message: '이름은 최소 2자 이상이어야 합니다.' })
