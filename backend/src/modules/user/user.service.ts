@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { CoreOutput } from '../../common/dtos/coreOutput.dto';
 import * as Validator from 'class-validator';
 import { UserDataOutput } from './dtos/userData.dto';
-import { UserProfile } from "./types/userProfile.type";
+import { UpdateAccountDto } from "./dtos/updateAccount.dto";
 
 /** 실질적인 서비스 구현 */
 @Injectable()
@@ -38,6 +38,7 @@ export class UserService {
           mobile: input.mobile,
         }),
       );
+
       return { success: true };
     } catch (e) {
       return { success: false, error: '계정생성에 실패했습니다.' };
@@ -104,6 +105,27 @@ export class UserService {
         success: true,
       };
     } catch (error) {
+      return { success: false, error: '유저 데이터 업데이트 실패' };
+    }
+  }
+  /** 프로필 업데이트 */
+  async profileUpdate(id: number, updateData: UpdateAccountDto): Promise<CoreOutput> {
+    try {
+      const thisEmail = await this.findById(id).then((user) => user.email);
+      const exists = await this.userRepository.findOne({
+        where: [{ email: updateData.email }],
+      });
+      if (thisEmail == updateData.email || !exists) {
+        await this.userRepository.update(id, {
+          email: updateData.email,
+          password: await bcrypt.hash(updateData.password, 10),
+          name: updateData.name,
+          mobile: updateData.mobile,
+        });
+        return { success: true };
+      }
+      return { success: false, error: '중복된 이메일입니다.' };
+    } catch (e) {
       return { success: false, error: '유저 데이터 업데이트 실패' };
     }
   }

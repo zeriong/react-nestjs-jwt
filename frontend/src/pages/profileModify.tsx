@@ -35,6 +35,7 @@ export const ProfileModify = () => {
     useEffect(() => {
         dispatch(sendMyProfile());
     }, [])
+
     const onSubmit = handleSubmit(async () => {
         const {email,password,name,mobile} = getValues();
         await Api().patch(
@@ -53,6 +54,12 @@ export const ProfileModify = () => {
             });
     });
 
+    const [inputValue, setInputValue] = useState()
+
+    const onChange = ({target: {value, id}}) => {
+        setInputValue(value);
+    }
+
     return ( loading ? (<div>로딩중...</div>) : (
             <div>
                 <form
@@ -63,9 +70,12 @@ export const ProfileModify = () => {
                         <div>
                             <h1>{`사용중인 이름: ${userState.name}`}</h1>
                             <input
+                                id="name"
+                                onChange={getValues}
                                 className="border border-gray-400 rounded px-2 py-1 w-96"
                                 {...register("name", { required: true, minLength: 2, maxLength: 30 })}
                                 type="text"
+                                value={userState.name}
                                 placeholder="수정할 이름을 입력해주세요."
                             />
                             <p className="mt-1 text-red-500 text-xs font-normal h-3">
@@ -75,6 +85,7 @@ export const ProfileModify = () => {
                         <div>
                             <p>{`사용중인 이메일: ${userState.email}`}</p>
                             <input
+                                id="email"
                                 className="border border-gray-400 rounded px-2 py-1 w-96"
                                 {...register("email", {
                                     required: true,
@@ -83,6 +94,7 @@ export const ProfileModify = () => {
                                     pattern: /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i,
                                 })}
                                 placeholder="변경할 이메일을 입력해주세요."
+
                             />
                             <p className="mt-1 text-red-500 text-xs font-normal h-3">
                                 {errors.email && '이메일을 입력해주시기 바랍니다.'}
@@ -91,6 +103,7 @@ export const ProfileModify = () => {
                         <div>
                             <p>{`사용중인 휴대전화번호: ${userState.mobile}`}</p>
                             <input
+                                id="mobile"
                                 className="border border-gray-400 rounded px-2 py-1 w-96"
                                 {...register("mobile",
                                     {
@@ -98,6 +111,7 @@ export const ProfileModify = () => {
                                         minLength: 13
                                     })}
                                 type="text"
+                                value={userState.mobile}
                                 placeholder="휴대폰번호를 입력해주세요."
                                 onInput={(e) => {
                                     let val = e.currentTarget.value.substring(0, 13).replace(/[^0-9]/g, '')
@@ -110,11 +124,13 @@ export const ProfileModify = () => {
                                 {errors.mobile && '휴대전화번호를 입력해주세요.'}
                             </p>
                         </div>
+                        <span></span>
                         <div>
                             <h1>비밀번호 수정</h1>
                             <input
+                                id="password"
                                 className="border border-gray-400 rounded px-2 py-1 w-96"
-                                {...register("password", { required: true,  minLength: 8, maxLength: 100 })}
+                                {...register("password", { minLength: 8, maxLength: 100 })}
                                 type={ PwShow ? "text" : "password" }
                                 placeholder="수정할 비밀번호를 입력해주세요."
                             />
@@ -128,9 +144,9 @@ export const ProfileModify = () => {
                             </div>
                             <h1>비밀번호 수정 재확인</h1>
                             <input
+                                id="passwordConfirm"
                                 className="border border-gray-400 rounded px-2 py-1 w-96"
                                 {...register("passwordConfirm", {
-                                    required: true,
                                     validate: value => value === password
                                 })}
                                 type={ PwConfirmShow ? "text" : "password" }
