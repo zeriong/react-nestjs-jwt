@@ -15,8 +15,16 @@ import { CoreOutput } from '../../common/dtos/coreOutput.dto';
 import { CreateAccountDto } from './dtos/createAccount.dto';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
 import { UpdateAccountDto } from './dtos/updateAccount.dto';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('user')
+@ApiTags('User') //스웨거 Tag를 지정
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -35,13 +43,28 @@ export class UserController {
   /** 유저데이터 수정 */
   @Patch('modify')
   @UseGuards(JwtAuthGuard)
-  profileUpdate(@Req() req, @Body() updateData: UpdateAccountDto): Promise<CoreOutput> {
-    return this.userService.profileUpdate(req.user.id, updateData);
+  profileUpdate(
+    @Req() req,
+    @Body() updateData: UpdateAccountDto,
+  ): Promise<CoreOutput> {
+    return this.userService.profileUpdate(req.user, updateData);
   }
 
   /** 프로필 response */
-  @Get('profile')
+  @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  @ApiOperation({
+    summary: '유저프로필',
+    description: '유저프로필 데이터 API',
+  })
+  @ApiCreatedResponse({
+    description: '성공여부',
+    schema: {
+      example: { success: true },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async profile(@Req() req): Promise<User> {
     return await this.userService.profile(req.user.id);
   }

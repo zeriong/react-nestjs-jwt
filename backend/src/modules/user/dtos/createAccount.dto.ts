@@ -1,7 +1,9 @@
 import * as Validator from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateAccountDto {
   /** email */
+  @ApiProperty()
   @Validator.IsEmail({}, { message: '이메일을 입력해 주시기 바랍니다.' })
   @Validator.Length(6, 70, { message: '이메일은 6자 이상이여야 합니다.' })
   email: string;

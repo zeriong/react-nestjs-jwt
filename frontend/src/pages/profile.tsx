@@ -23,7 +23,7 @@ export const Profile = () => {
     return ( loading ? (<div>로딩중...</div>) : (
         <>
             <div className="flex flex-col gap-5 flex justify-center items-center">
-                <h1>{`이름: ${userState.name}님`}</h1>
+                <h1>{`이름: ${userState.name}`}</h1>
                 <p>{`이메일: ${userState.email}`}</p>
                 <p>{`휴대전화번호: ${userState.mobile}`}</p>
                 <Link to={'/profile/modify'} className="border-8 border-sky-300 bg-sky-200 w-60 text-center" >회원정보 수정</Link>

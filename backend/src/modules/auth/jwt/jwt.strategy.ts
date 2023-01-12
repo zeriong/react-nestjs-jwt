@@ -6,6 +6,8 @@ import { ConfigService } from '@nestjs/config';
 import { AccessPayload } from './jwt.interfaces';
 import { User } from '../../../entities/user.entity';
 import { UserService } from '../../user/user.service';
+import { ApiProperty } from "@nestjs/swagger";
+import { testId } from "../../../common/swagger/test.dto";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -19,7 +21,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       secretOrKey: config.get('JWT_ACCESS_TOKEN_PRIVATE_KEY'),
     });
   }
-
   async validate(payload: AccessPayload): Promise<User | null> {
     console.log('JwtStrategy: 접근');
     let user = null;

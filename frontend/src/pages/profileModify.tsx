@@ -9,8 +9,8 @@ export const ProfileModify = () => {
     type FormData = {
         name: string;
         email: string;
-        password: string;
-        passwordConfirm: string;
+        password?: string | '';
+        passwordConfirm?: string | '';
         mobile: string;
     };
 
@@ -34,17 +34,18 @@ export const ProfileModify = () => {
 
     useEffect(() => {
         dispatch(sendMyProfile());
-    }, [])
+    }, []);
 
     const onSubmit = handleSubmit(async () => {
+        console.log('서브밋~!!')
         const {email,password,name,mobile} = getValues();
         await Api().patch(
             '/user/modify',
             {
                 "email": email,
-                "password": password,
                 "name": name,
                 "mobile": mobile,
+                "password": password,
             },)
             .then((res) => {
                 console.log(res.data);
@@ -130,7 +131,7 @@ export const ProfileModify = () => {
                             <input
                                 id="password"
                                 className="border border-gray-400 rounded px-2 py-1 w-96"
-                                {...register("password", { minLength: 8, maxLength: 100 })}
+                                {...register("password", { maxLength: 24, required: false })}
                                 type={ PwShow ? "text" : "password" }
                                 placeholder="수정할 비밀번호를 입력해주세요."
                             />
@@ -147,7 +148,8 @@ export const ProfileModify = () => {
                                 id="passwordConfirm"
                                 className="border border-gray-400 rounded px-2 py-1 w-96"
                                 {...register("passwordConfirm", {
-                                    validate: value => value === password
+                                    validate: value => value === password || value === ''
+                                    , required: false
                                 })}
                                 type={ PwConfirmShow ? "text" : "password" }
                                 placeholder="비밀번호를 다시 한번 입력해주세요."

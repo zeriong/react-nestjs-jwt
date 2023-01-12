@@ -3,11 +3,11 @@ import * as Validator from 'class-validator';
 export class UpdateAccountDto {
   /** email */
   @Validator.IsEmail({}, { message: '이메일을 입력해 주시기 바랍니다.' })
-  @Validator.Length(6, 70, { message: '이메일은 6자 이상이여야 합니다.' })
+  @Validator.MaxLength(32, { message: '이메일은 6자 이상이여야 합니다.' })
   email: string;
 
   /** password */
-  @Validator.Length(8, 100, {
+  @Validator.MaxLength(128, {
     message: '비밀번호는 최소 8자 이상이어야 합니다.',
   })
   @Validator.IsString()

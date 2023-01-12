@@ -4,15 +4,15 @@ import { Column, Entity } from 'typeorm';
 @Entity({ name: 'user' })
 export class User extends coreEntity {
   /** email */
-  @Column({ unique: true, length: 55, comment: '유저 이메일' })
+  @Column({ unique: true, length: 32, comment: '유저 이메일' })
   email: string;
 
   /** password */
-  @Column({ select: false }) //select할 수 없게 만듦
+  @Column({ select: false, length: 128 }) //select할 수 없게 만듦
   password: string;
 
   /** name */
-  @Column({ length: 30, comment: '유저 이름' })
+  @Column({ length: 32, comment: '유저 이름' })
   name: string;
 
   /** mobile */
@@ -20,6 +20,6 @@ export class User extends coreEntity {
   mobile: string;
 
   /** refreshToken */
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 255 })
   refreshToken?: string;
 }

@@ -7,7 +7,8 @@ import * as bcrypt from 'bcrypt';
 import { CoreOutput } from '../../common/dtos/coreOutput.dto';
 import * as Validator from 'class-validator';
 import { UserDataOutput } from './dtos/userData.dto';
-import { UpdateAccountDto } from "./dtos/updateAccount.dto";
+import { UpdateAccountDto } from './dtos/updateAccount.dto';
+import { ApiProperty } from "@nestjs/swagger";
 
 /** 실질적인 서비스 구현 */
 @Injectable()
@@ -109,22 +110,42 @@ export class UserService {
     }
   }
   /** 프로필 업데이트 */
-  async profileUpdate(id: number, updateData: UpdateAccountDto): Promise<CoreOutput> {
+  async profileUpdate(
+    user: User,
+    updateData: UpdateAccountDto,
+  ): Promise<CoreOutput> {
     try {
-      const thisEmail = await this.findById(id).then((user) => user.email);
-      const exists = await this.userRepository.findOne({
+      const thisEmail = user.email;
+      const emailExists = await this.userRepository.findOne({
         where: [{ email: updateData.email }],
       });
-      if (thisEmail == updateData.email || !exists) {
-        await this.userRepository.update(id, {
-          email: updateData.email,
+      const mobileExists = await this.userRepository.findOne({
+        where: [{ mobile: updateData.mobile }],
+      });
+
+      if (thisEmail != updateData.email && emailExists) {
+        return { success: false, error: '중복된 이메일입니다.', target: 'email' };
+      }
+      if (thisEmail != updateData.email && mobileExists) {
+        return { success: false, error: '중복된 휴대폰입니다.' };
+      }
+
+      const userData = {
+        email: updateData.email,
+        name: updateData.name,
+        mobile: updateData.mobile,
+      };
+
+      if (updateData.password === '') {
+        await this.userRepository.update(user.id, userData);
+        return { success: true };
+      } else {
+        await this.userRepository.update(user.id, {
+          ...userData,
           password: await bcrypt.hash(updateData.password, 10),
-          name: updateData.name,
-          mobile: updateData.mobile,
         });
         return { success: true };
       }
-      return { success: false, error: '중복된 이메일입니다.' };
     } catch (e) {
       return { success: false, error: '유저 데이터 업데이트 실패' };
     }
