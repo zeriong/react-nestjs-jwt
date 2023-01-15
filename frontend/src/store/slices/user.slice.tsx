@@ -12,7 +12,7 @@ export interface userState {
 }
 const initUserState: userState = {
     data: {
-        name: null,
+        name: "",
         email: null,
         mobile: null,
         password: null,

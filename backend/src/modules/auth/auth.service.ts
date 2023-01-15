@@ -26,7 +26,10 @@ export class AuthService {
   ) {}
 
   /** 로그인 */
-  async login({ email, password }: LoginInput, response: Response): Promise<LoginOutput> {
+  async login(
+    { email, password }: LoginInput,
+    response: Response,
+  ): Promise<LoginOutput> {
     try {
       // 계정, 비밀번호 검증
       const validateUser: UserDataOutput = await this.userService.validate(

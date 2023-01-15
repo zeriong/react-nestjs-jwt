@@ -1,5 +1,5 @@
-import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
 import {store} from "../store";
+import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
 import {sendRefreshAccessToken, SET_LOGOUT} from "../store/slices/auth.slice";
 
 const API_URL = "http://localhost:4000";

@@ -1,8 +1,12 @@
 import React, {Fragment, useEffect, useState} from "react";
-import {useSearchParams} from "react-router-dom";
+import {useActionData, useSearchParams} from "react-router-dom";
 import {useForm} from "react-hook-form";
 import {Dialog, Transition } from "@headlessui/react";
 import {Api} from "../utile/api";
+import {FuncButton} from "../components/funcBtn";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../store";
+import {SIGNUP_ERROR} from "../store/slices/auth.slice";
 /** 폼항목 */
 type FormData = {
     name: string;
@@ -13,17 +17,31 @@ type FormData = {
 };
 
 export const SignupModal = () => {
-
     /** 쿼리를 이용한 모달 팝업 컨트롤 */
     const [searchParams, setSearchParams] = useSearchParams();
     const [isShow, setIsShow] = useState(false);
 
+    const setRouterQuery = (key: string, value:string) => {
+        searchParams.set(key, value);
+        setSearchParams(searchParams);
+    };
     let closeModal = () => {
         if (searchParams.get("modal") === "sign-up") {
             searchParams.delete('modal');
             setSearchParams(searchParams);
+            setValue('email', "");
+            setValue('password', "");
+            setValue('passwordConfirm', "");
+            setValue('mobile', "");
+            setValue('name', "");
+            dispatch(SIGNUP_ERROR(""));
         }
     };
+
+    /** State Management */
+    const dispatch = useDispatch<AppDispatch>();
+    const { data:{ signupError }, loading } = useSelector((state: RootState) => (state.auth));
+
 
     useEffect(() => {
         if (searchParams.get("modal") === "sign-up") {
@@ -38,7 +56,7 @@ export const SignupModal = () => {
         register,
         handleSubmit,
         watch,
-        formState: { errors },
+        formState: { errors, isValid },
     } = useForm<FormData>({ mode: 'onChange' });
 
     const [PwShow, setPwShow] = useState(false);
@@ -46,8 +64,6 @@ export const SignupModal = () => {
 
     // passwordConfirm === password 검증을 위한 변수
     let password = watch("password", "");
-
-    //const navigate = useNavigate();
 
     /** submit */
     const onSubmit = handleSubmit(async () => {
@@ -62,7 +78,13 @@ export const SignupModal = () => {
                 "refreshToken": "",
             },)
             .then((res) => {
-                console.log(res.data);
+                if (res.data.success) {
+                    console.log(res.data);
+                    closeModal();
+                    setRouterQuery("modal","success-signup");
+                } else {
+                    dispatch(SIGNUP_ERROR(res.data.error));
+                }
             })
             .catch((e) => {
                 console.log(e);
@@ -95,11 +117,20 @@ export const SignupModal = () => {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <Dialog.Panel className="w-full max-w-sm transform overflow-hidden rounded-lg bg-white p-6 md:p-8 text-left align-middle shadow-xl transition-all">
-                                    <div className="text-2xl">
+                                    <div className="text-2xl font-bold h-[10px]">
                                         회원가입
                                     </div>
+                                    {
+                                        signupError ? (
+                                            <div className="bg-red-500 absolute top-9 right-9 text-white py-1 px-2">
+                                                {signupError}
+                                            </div>
+                                        ) : (
+                                            <></>
+                                        )
+                                    }
                                     <form
-                                        className="flex flex-col mx-auto mt-12 gap-y-4"
+                                        className="flex flex-col mx-auto mt-12 gap-y-4 justify-center"
                                         onSubmit={onSubmit}
                                     >
                                         <div>
@@ -139,7 +170,7 @@ export const SignupModal = () => {
                                                 <p className="mt-1 text-red-500 text-xs font-normal h-3">
                                                     {errors.password && '비밀번호는 최소 8자 이상입니다.'}
                                                 </p>
-                                                <span onClick={()=>{setPwShow(!PwShow)}} className='cursor-pointer h-3 text-xs bg-gray-400 h-fit text-gray-100 px-2 mr-1'>
+                                                <span onClick={()=>{setPwShow(!PwShow)}} className='cursor-pointer h-3 text-xs bg-gray-600 h-fit text-gray-100 px-2 mr-1 font-light'>
                                                     { PwShow ? "비밀번호 숨김" : "비밀번호 확인" }
                                                 </span>
                                             </div>
@@ -158,7 +189,7 @@ export const SignupModal = () => {
                                                 <p className="mt-1 text-red-500 text-xs font-normal h-3">
                                                     {errors.passwordConfirm && '비밀번호가 동일하지 않습니다.'}
                                                 </p>
-                                                <span onClick={()=>{setPwConfirmShow(!PwConfirmShow)}} className='cursor-pointer h-3 text-xs bg-gray-400 h-fit text-gray-100 px-2 mr-1'>
+                                                <span onClick={()=>{setPwConfirmShow(!PwConfirmShow)}} className='cursor-pointer h-3 text-xs bg-gray-600 h-fit text-gray-100 px-2 mr-1 font-light'>
                                                     { PwConfirmShow ? "비밀번호 숨김" : "비밀번호 확인" }
                                                 </span>
                                             </div>
@@ -184,7 +215,13 @@ export const SignupModal = () => {
                                                 {errors.mobile && '휴대전화번호를 입력해주세요.'}
                                             </p>
                                         </div>
-                                        <button className="border-8 border-sky-300 bg-sky-200">회원가입</button>
+                                        <FuncButton className="w-full py-1 bg-orange-500 text-white mx-auto text-center
+                                         cursor-pointer text-[22px] items-center rounded-2xl"
+                                                    text="회원가입"
+                                                    type="submit"
+                                                    disabled={!isValid}
+                                                    loading={loading}
+                                        />
                                     </form>
                                 </Dialog.Panel>
                             </Transition.Child>

@@ -4,7 +4,7 @@ import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { UserModule } from './modules/user/user.module';
-import { AuthModule } from "./modules/auth/auth.module";
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [

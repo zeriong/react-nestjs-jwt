@@ -7,6 +7,9 @@ import {sendMyProfile, SET_USER} from "../store/slices/user.slice";
 import {Link, useSearchParams} from "react-router-dom";
 import {Api} from "../utile/api";
 import {sendLogout, SET_LOGIN, SET_LOGOUT} from "../store/slices/auth.slice";
+import {SigninModal} from "../modals/SigninModal";
+import memoImg from "../styles/image/scroll-g6570d2351_1920.png";
+import {SuccessSignupModal} from "../modals/SuccessSignupModal";
 
 type FormData = {
     email: string;
@@ -16,17 +19,14 @@ type FormData = {
 export const Home = ()=> {
     /** 폼 컨트롤 */
     const {
-        register,
         handleSubmit,
         getValues,
         formState: { errors }
     } = useForm<FormData>({ mode: "onChange" });
 
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [PwShow, setPwShow] = useState(false);
-    //const navigate = useNavigate();
-
     /** 쿼리세팅 */
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const setRouterQuery = (key: string, value:string) => {
         searchParams.set(key, value);
         setSearchParams(searchParams);
@@ -41,114 +41,101 @@ export const Home = ()=> {
         if (isLoggedIn) {
             dispatch(sendMyProfile());
         }
-    }, [])
-
-    /** submit */
-    const onSubmit = handleSubmit(async () => {
-        const {email,password} = getValues();
-        await Api().post(
-            '/auth/login',
-            {
-                email, password,
-            },)
-            .then((res) => {
-                console.log(res.data);
-                console.log(isLoggedIn);
-                if (res.data.success) {
-                    dispatch(SET_LOGIN(res.data.accessToken));
-                    dispatch(SET_USER(res.data.user));
-                } else {dispatch(SET_LOGOUT());}
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    });
+    }, [dispatch])
 
     return (
         <>
-            <div className="bg-sky-100 w-full h-full flex-col justify-center text-center py-8 relative">
-                <div
-                    className="
-                     flex flex-col justify-center absolute w-login top-1/2 left-1/2 -translate-x-1/2
-                     -translate-y-1/2 bg-white py-8 px-5 rounded-2xl border-gray-300 border-2 shadow-md
-                     "
-                >
-                    {
-                        isLoggedIn ? (
-                            <div className="flex flex-col">
-                                <div className='text-2xl font-extrabold text-gray-600'>{`${userState.data.name}님 ㅎㅇ`}</div>
-                                <Link to={'/profile'} className="border-8 border-sky-300 bg-sky-200 mt-3" >마이페이지</Link>
-                                <button
-                                    type="button"
-                                    className="border-8 border-sky-300 bg-sky-200 mt-3"
-                                    onClick={() => {
-                                        console.log('클릭!')
-                                        dispatch(sendLogout())
-                                    }}
-                                >
-                                    로그아웃
-                                </button>
+            <header className="flex justify-between items-center px-10 py-3 border-b-2 whitespace-nowrap
+            fixed bg-white w-full">
+                <Link to="/" className="font-bold text-[20px]">Zerion Keep!</Link>
+                <div className="flex gap-8 justify-start w-full pl-12">
+                    <div className="cursor-pointer">서비스</div>
+                    <div className="cursor-pointer">기능안내</div>
+                    <div className="cursor-pointer">고객사례</div>
+                    <div className="cursor-pointer">요금안내</div>
+                    <div className="cursor-pointer">공지사항</div>
+                </div>
+                {
+                    isLoggedIn ? (
+                        <div className="flex flex-row items-center">
+                            <div className='text-[20px] font-bold text-gray-600 mr-4'>{`${userState.data.name}님`}</div>
+                            <Link to='dashboard' className="w-[100px] flex justify-center cursor-pointer
+                            rounded-2xl p-1 bg-orange-500 text-white mr-3" >마이페이지</Link>
+                            <button
+                                type="button"
+                                className="w-[100px] flex justify-center cursor-pointer
+                                rounded-2xl border-[1px] border-gray-500 p-1"
+                                onClick={() => {
+                                    console.log('클릭!');
+                                    dispatch(sendLogout())
+                                }}
+                            >
+                                로그아웃
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex gap-4 items-center m-auto font-medium">
+                        <div onClick={() => setRouterQuery("modal","sign-in")} className="w-[100px] flex justify-center cursor-pointer
+                        rounded-2xl border-[1px] border-gray-500 p-1">
+                            로그인하기
+                        </div>
+                        <div onClick={() => setRouterQuery("modal","sign-up")} className="w-[100px] flex justify-center cursor-pointer
+                        rounded-2xl p-1 bg-orange-500 text-white">
+                            회원가입
+                        </div>
+                    </div>
+                    )
+                }
+            </header>
+            <main className="flex w-full h-full overflow-hidden">
+                <div className="flex h-full w-full py-[100px]">
+                    <div className="flex flex-col w-auto h-auto m-auto p-[60px] font-bold text-[48px] text-gray-800">
+                        <span className="mt-10">깔끔한 기록을 위한</span>
+                        <span>메모 서비스</span>
+                        <span>Zeriong Keep!</span>
+                        {isLoggedIn ? (
+                            <div className="flex flex-col mt-14">
+                                <div className="flex text-[26px] font-bold justify-center">
+                                    {`어서오세요! ${userState.data.name}님`}
+                                </div>
+                                <Link to="dashboard" className="text-[30px] font-bold flex py-2 px-5 items-center bg-orange-500
+                                 rounded-2xl justify-center mt-8 cursor-pointer text-white">
+                                    메모장 열기
+                                </Link>
                             </div>
                         ) : (
-                            <div>
-                                <div className='text-2xl font-extrabold text-gray-600'>로그인</div>
-                                <form
-                                    className="flex flex-col mx-auto w-full justify-center text-center gap-y-4"
-                                    onSubmit={onSubmit}
-                                >
-                                    <div className="flex flex-col">
-                                        <label htmlFor="email" className="text-left">이메일</label>
-                                        <input
-                                            className="border border-gray-400 rounded px-2 py-1 w-full"
-                                            type="text"
-                                            id="email"
-                                            placeholder="이메일을 입력해주세요."
-                                            {...register("email", {
-                                                required: true,
-                                                minLength: 6, maxLength: 70,
-                                                pattern: /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i,
-                                            })}
-                                        />
-                                        <p className="flex flex-start mt-1 text-red-500 text-xs font-normal h-3">
-                                            {errors.email && '이메일을 입력해주시기 바랍니다.'}
-                                        </p>
-                                    </div>
-                                    <div className="flex flex-col mb-3">
-                                        <label htmlFor="password" className="text-left">비밀번호</label>
-                                        <input
-                                            className="border border-gray-400 rounded px-2 py-1 w-full"
-                                            {...register("password", { required: true,  minLength: 8, maxLength: 100 })}
-                                            type={ PwShow ? "text" : "password" }
-                                            id="password"
-                                            placeholder="비밀번호를 입력해주세요."
-                                        />
-                                        <div className="flex justify-between">
-                                            <p className="mt-1 text-red-500 text-xs font-normal h-3">
-                                                {errors.password && '비밀번호는 최소 8자 이상입니다.'}
-                                            </p>
-                                            <span onClick={()=>{setPwShow(!PwShow)}} className='cursor-pointer h-3 text-xs bg-gray-400 h-fit text-gray-100 px-2 mr-1'>
-                                                { PwShow ? "비밀번호 숨김" : "비밀번호 확인" }
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <button
-                                        className="bg-sky-200 border-4"
-                                        type="submit"
-                                    >
-                                        로그인
-                                    </button>
-                                </form>
-                                <span
-                                    onClick={() => setRouterQuery("modal","sign-up")}
-                                    className=" mt-5 bg-sky-200 border-4 flex justify-center mb-3 cursor-pointer"
-                                >회원가입
-                                </span>
+                            <div className="text-[26px] font-medium mt-20">
+                                자주 잊는 계획이나 일정관리, 정산관리 등<br/>
+                                다양한 메모를 좀 더 깔끔하게 정리하세요.<br/>
+                                가입하고 무료로 시작하세요.
                             </div>
-                        )
-                    }
+                        )}
+                        {
+                            isLoggedIn ? (
+                                <></>
+                            ) : (
+                                <div className="flex flex-row text-[30px] mt-10">
+                                    <span onClick={() => setRouterQuery("modal","sign-in")}
+                                          className="mt-5 w-[180px] py-2 flex justify-center border-[1px] border-gray-500
+                                          mb-3 cursor-pointer text-[22px] items-center mr-6 rounded-2xl">
+                                        로그인하기
+                                    </span>
+                                    <span onClick={() => setRouterQuery("modal","sign-up")}
+                                          className="mt-5 w-[180px] py-2 flex justify-center mb-3 cursor-pointer text-[22px]
+                                           items-center bg-orange-500 rounded-2xl text-white">
+                                        회원가입
+                                    </span>
+                                </div>)
+                        }
+                    </div>
+                    <div className="flex items-center w-7/12 h-full font-bold text-[48px] text-gray-800">
+                        <img className="flex m-auto h-[600px]" src={memoImg}/>
+                    </div>
                 </div>
-            </div>
+            </main>
+            <SuccessSignupModal/>
             <SignupModal/>
+            <SigninModal/>
         </>
     );
 };

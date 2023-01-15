@@ -1,20 +1,21 @@
 import React from "react";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import {Home} from "../pages/home";
-import {Profile} from "../pages/profile";
+import {Dashboard} from "../pages/layout/dashboard";
 import {ProfileModify} from "../pages/profileModify";
 import {PrivateElement} from "./privateElement";
-import {store} from "../store";
+import {Profile} from "../pages/profile";
+import {DashboardMain} from "../pages/layout/dashboardMain";
 
 export const Index = ()=> {
-    const isLoggedIn = store.getState().auth.data.isLoggedIn;
     return (
         <Router>
             <Routes>
-                <Route path={`${process.env.PUBLIC_URL}/`} element={<Home/>}/>
-                <Route element={<PrivateElement isLoggedIn={isLoggedIn}/>}>
-                    <Route path={'profile'} element={<Profile/>}/>
-                    <Route path={'profile/modify'} element={<ProfileModify/>}/>
+                <Route path="/" element={<Home/>}/>
+                <Route path="/dashboard/*" element={<PrivateElement><Dashboard/></PrivateElement>}>
+                    <Route index element={<DashboardMain/>}/>
+                    <Route path="profile" element={<Profile/>}/>
+                    <Route path="profileModify" element={<ProfileModify/>}/>
                 </Route>
             </Routes>
         </Router>
