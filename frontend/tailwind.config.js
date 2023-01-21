@@ -7,7 +7,7 @@ module.exports = {
     extend: {
       colors: {
         'primary': {
-          50: '#d2d2d2',
+          500: '#d2d2d2',
         },
         'layoutGray': {
           lightUp: '#f8f8f6',

@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {sendMyProfile, userState} from "../store/slices/user.slice";
-import {AppDispatch, RootState} from "../store";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store";
 import {useForm} from "react-hook-form";
-import {Api} from "../utile/api";
-import {MODIFY_ERROR, SIGNUP_ERROR} from "../store/slices/auth.slice";
-import {useNavigate, useSearchParams} from "react-router-dom";
-import {SuccessProfileModifyModal} from "../modals/SuccessProfileModifyModal";
-import {FuncButton} from "../components/funcBtn";
+import {Api} from "../../utile/api";
+import {useSearchParams} from "react-router-dom";
+import {SuccessProfileModifyModal} from "../../modals/SuccessProfileModifyModal";
+import {FuncButton} from "../../components/funcBtn";
 
 export const ProfileModify = () => {
     type FormData = {
@@ -26,10 +24,9 @@ export const ProfileModify = () => {
 
     const [PwShow, setPwShow] = useState(false);
     const [PwConfirmShow, setPwConfirmShow] = useState(false);
+    const [occurError, setOccurError] = useState('');
 
     const { data: userState, loading } = useSelector((state: RootState) => (state.user));
-    const { data: modifyError } = useSelector((state: RootState) => (state.auth));
-    const dispatch = useDispatch<AppDispatch>();
 
     const {
         setValue,
@@ -51,13 +48,14 @@ export const ProfileModify = () => {
     let password = watch("password", "");
 
     useEffect(() => {
-        reset(userState)
+        reset();
     }, [reset, userState]);
 
     useEffect(() => {
-        dispatch(MODIFY_ERROR(''));
-    }, [searchParams, dispatch]);
+        setOccurError('');
+    }, [searchParams]);
 
+    /** submit */
     const onSubmit = handleSubmit(async () => {
         console.log('서브밋~!!')
         const {email,password,name,mobile} = getValues();
@@ -74,7 +72,7 @@ export const ProfileModify = () => {
                 if (res.data.success) {
                     setRouterQuery("modal","success-profileModify");
                 } else {
-                    dispatch(MODIFY_ERROR(res.data.error));
+                    setOccurError(res.data.error);
                 }
             })
             .catch((e) => {
@@ -85,7 +83,7 @@ export const ProfileModify = () => {
     return ( loading ? (<div>로딩중...</div>) : (
         <>
             <form
-                className="flex flex-col justify-center h-full text-center items-center pt-[60px] pl-[240px] gap-7 relative bottom-5"
+                className="flex flex-col justify-center h-full text-center items-center gap-7 relative bottom-5"
                 onSubmit={onSubmit}
             >
                 <div className="flex text-start flex-col gap-5">
@@ -102,7 +100,7 @@ export const ProfileModify = () => {
                         </p>
                     </div>
                     <div className="relative">
-                        <div className="absolute -top-5 text-red-500 font-bold">{`${modifyError.modifyError}`}</div>
+                        <div className="absolute -top-5 text-red-500 font-bold">{occurError}</div>
                         <h1 className="font-bold text-[18px] text-[#5f5f5f]">이메일<span className="text-[14px] text-[#3f3f3f]"> (현계정에 등록된 이메일 외 중복이메일은 등록불가)</span></h1>
                         <input
                             className="border border-gray-400 rounded px-2 py-1 w-96"

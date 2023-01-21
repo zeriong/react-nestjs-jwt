@@ -5,9 +5,6 @@ export interface AuthState {
     data: {
         isLoggedIn: boolean,
         accessToken: string,
-        signupError: string,
-        signinError: string,
-        modifyError: string,
     }
     loading: boolean,
 }
@@ -16,9 +13,6 @@ const initAuthState: AuthState = {
     data: {
         isLoggedIn: false,
         accessToken: '',
-        signupError: '',
-        signinError: '',
-        modifyError: '',
     },
     loading: true,
 }
@@ -71,15 +65,6 @@ const authSlice = createSlice({
             localStorage.setItem('at', '');
             state.data.isLoggedIn = false;
         },
-        SIGNIN_ERROR: (state: AuthState, action: PayloadAction<string>) => {
-            state.data.signinError = action.payload;
-        },
-        SIGNUP_ERROR: (state: AuthState, action: PayloadAction<string>) => {
-            state.data.signupError = action.payload;
-        },
-        MODIFY_ERROR: (state: AuthState, action: PayloadAction<string>) => {
-            state.data.modifyError = action.payload;
-        },
     },
     extraReducers: (builder) => {
         // sendRefreshAccessToken
@@ -105,6 +90,6 @@ const authSlice = createSlice({
     }
 })
 
-export const { SET_LOGIN, SET_LOGOUT, SIGNIN_ERROR, SIGNUP_ERROR, MODIFY_ERROR } = authSlice.actions;
+export const { SET_LOGIN, SET_LOGOUT } = authSlice.actions;
 
 export default authSlice.reducer;

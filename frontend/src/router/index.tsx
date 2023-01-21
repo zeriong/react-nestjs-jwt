@@ -1,21 +1,25 @@
 import React from "react";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import {Home} from "../pages/home";
-import {Dashboard} from "../pages/layout/dashboard";
-import {ProfileModify} from "../pages/profileModify";
+import {Home} from "../pages/intro";
+import {MemoLayout} from "../layout/memo";
+import {ProfileModify} from "../pages/memo/profileModify";
 import {PrivateElement} from "./privateElement";
-import {Profile} from "../pages/profile";
-import {DashboardMain} from "../pages/layout/dashboardMain";
+import {Profile} from "../pages/memo/profile";
+import {MemoMain} from "../pages/memo";
+import {HomeLayout} from "../layout/intro";
 
 export const Index = ()=> {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<Home/>}/>
-                <Route path="/dashboard/*" element={<PrivateElement><Dashboard/></PrivateElement>}>
-                    <Route index element={<DashboardMain/>}/>
+                <Route path="/" element={<HomeLayout/>}>
+                    <Route index element={<Home/>}/>
+                </Route>
+
+                <Route path="/memo/*" element={<PrivateElement><MemoLayout/></PrivateElement>}>
+                    <Route index element={<MemoMain/>}/>
                     <Route path="profile" element={<Profile/>}/>
-                    <Route path="profileModify" element={<ProfileModify/>}/>
+                    <Route path="profile/modify" element={<ProfileModify/>}/>
                 </Route>
             </Routes>
         </Router>

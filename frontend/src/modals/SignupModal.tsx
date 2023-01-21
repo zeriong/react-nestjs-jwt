@@ -1,12 +1,14 @@
 import React, {Fragment, useEffect, useState} from "react";
-import {useActionData, useSearchParams} from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 import {useForm} from "react-hook-form";
-import {Dialog, Transition } from "@headlessui/react";
-import {Api} from "../utile/api";
-import {FuncButton} from "../components/funcBtn";
+
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../store";
-import {SIGNUP_ERROR} from "../store/slices/auth.slice";
+
+import {Api} from "../utile/api";
+import {Dialog, Transition } from "@headlessui/react";
+import {FuncButton} from "../components/funcBtn";
+
 /** 폼항목 */
 type FormData = {
     name: string;
@@ -34,13 +36,12 @@ export const SignupModal = () => {
             setValue('passwordConfirm', "");
             setValue('mobile', "");
             setValue('name', "");
-            dispatch(SIGNUP_ERROR(""));
+            setOccurError('');
         }
     };
 
     /** State Management */
-    const dispatch = useDispatch<AppDispatch>();
-    const { data:{ signupError }, loading } = useSelector((state: RootState) => (state.auth));
+    const { loading } = useSelector((state: RootState) => (state.auth));
 
 
     useEffect(() => {
@@ -61,6 +62,7 @@ export const SignupModal = () => {
 
     const [PwShow, setPwShow] = useState(false);
     const [PwConfirmShow, setPwConfirmShow] = useState(false);
+    const [occurError, setOccurError] = useState('');
 
     // passwordConfirm === password 검증을 위한 변수
     let password = watch("password", "");
@@ -83,7 +85,7 @@ export const SignupModal = () => {
                     closeModal();
                     setRouterQuery("modal","success-signup");
                 } else {
-                    dispatch(SIGNUP_ERROR(res.data.error));
+                    setOccurError(res.data.error);
                 }
             })
             .catch((e) => {
@@ -120,15 +122,9 @@ export const SignupModal = () => {
                                     <div className="text-2xl font-bold h-[10px]">
                                         회원가입
                                     </div>
-                                    {
-                                        signupError ? (
-                                            <div className="bg-red-500 absolute top-9 right-9 text-white py-1 px-2">
-                                                {signupError}
-                                            </div>
-                                        ) : (
-                                            <></>
-                                        )
-                                    }
+                                    <div className="absolute top-9 right-9 text-red-500 py-1 px-2 font-bold">
+                                        {occurError}
+                                    </div>
                                     <form
                                         className="flex flex-col mx-auto mt-12 gap-y-4 justify-center"
                                         onSubmit={onSubmit}

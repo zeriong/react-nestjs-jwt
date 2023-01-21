@@ -9,10 +9,10 @@ export const Aside = () => {
                     Zeriong Keep!
                 </Link>
                 <div className="flex flex-col justify-center text-center px-5 text-[20px] font-extrabold text-[#4f4f4f]">
-                    <Link to="/dashboard" className="py-3 border-y-[1px] border-gray-300 w-full">
+                    <Link to="/memo" className="py-3 border-y-[1px] border-gray-300 w-full">
                         홈
                     </Link>
-                    <Link to="/dashboard/profile" className="py-3 border-b-[1px] border-gray-300 w-full">
+                    <Link to="profile" className="py-3 border-b-[1px] border-gray-300 w-full">
                         나의 회원정보
                     </Link>
                 </div>

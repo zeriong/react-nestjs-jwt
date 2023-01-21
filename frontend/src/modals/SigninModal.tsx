@@ -1,14 +1,14 @@
 import React, {Fragment, useEffect, useState} from "react";
-import {useSearchParams} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import {useForm} from "react-hook-form";
 import {Dialog, Transition } from "@headlessui/react";
-import {Api} from "../utile/api";
-import {SET_LOGIN, SET_LOGOUT, SIGNIN_ERROR, SIGNUP_ERROR} from "../store/slices/auth.slice";
+import {SET_LOGIN, SET_LOGOUT } from "../store/slices/auth.slice";
 import {SET_USER} from "../store/slices/user.slice";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../store";
+
+import {Api} from "../utile/api";
 import {FuncButton} from "../components/funcBtn";
-import {log} from "util";
 /** 폼항목 */
 type FormData = {
     email: string;
@@ -20,14 +20,14 @@ export const SigninModal = () => {
     /** 쿼리를 이용한 모달 팝업 컨트롤 */
     const [searchParams, setSearchParams] = useSearchParams();
     const [isShow, setIsShow] = useState(false);
+    const navigate = useNavigate();
     const setRouterQuery = (key: string, value:string) => {
         searchParams.set(key, value);
         setSearchParams(searchParams);
     };
 
     const dispatch = useDispatch<AppDispatch>();
-    const authState = useSelector((state: RootState) => (state.auth));
-    const loading = authState.loading;
+    const { loading } = useSelector((state: RootState) => (state.auth));
 
     let closeModal = () => {
         if (searchParams.get("modal") === "sign-in") {
@@ -35,8 +35,8 @@ export const SigninModal = () => {
             setSearchParams(searchParams);
             setValue('email', "");
             setValue('password', "");
-            dispatch(SIGNIN_ERROR(""));
-            dispatch(SIGNUP_ERROR(""));
+            setOccurError('');
+            reset();
         }
     };
 
@@ -48,6 +48,7 @@ export const SigninModal = () => {
 
     /** 폼 컨트롤 */
     const {
+        reset,
         setValue,
         getValues,
         register,
@@ -56,6 +57,7 @@ export const SigninModal = () => {
     } = useForm<FormData>({ mode: 'onChange' });
 
     const [PwShow, setPwShow] = useState(false);
+    const [occurError, setOccurError] = useState('');
 
     /** submit */
     const onSubmit = handleSubmit(async () => {
@@ -73,8 +75,9 @@ export const SigninModal = () => {
                     closeModal();
                     setValue('email', "");
                     setValue('password', "");
+                    navigate('/memo');
                 } else {
-                    dispatch(SIGNIN_ERROR(res.data.error));
+                    setOccurError(res.data.error);
                     dispatch(SET_LOGOUT());
                 }
             })
@@ -114,7 +117,7 @@ export const SigninModal = () => {
                                         로그인
                                     </div>
                                     <div className="h-[20px] relative top-4 text-red-500">
-                                        {authState.data.signinError}
+                                        {occurError}
                                     </div>
                                     <form
                                         className="flex flex-col mx-auto mt-8 gap-y-4"

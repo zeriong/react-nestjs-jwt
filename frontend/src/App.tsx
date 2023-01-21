@@ -4,15 +4,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "./store";
 import {sendRefreshAccessToken} from "./store/slices/auth.slice";
 
+
 function App() {
-    const { data, loading } = useSelector((state: RootState) => (state.auth));
+    const { loading } = useSelector((state: RootState) => (state.auth));
     const dispatch = useDispatch<AppDispatch>();
     useEffect( ()=> {
         (async () => {
-            await dispatch(sendRefreshAccessToken())
-            //console.log('토큰:', store.getState().auth.data.accessToken)
-        })()
-    },[dispatch])
+            await dispatch(sendRefreshAccessToken());
+        })();
+    },[dispatch]);
 
     return (
         <>

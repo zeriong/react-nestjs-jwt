@@ -6,8 +6,8 @@ import {Outlet} from "react-router-dom";
 import {Header} from "./header";
 import {Aside} from "./aside";
 
-export const Dashboard = () => {
-    const { data: userState, loading } = useSelector((state: RootState) => (state.user));
+export const MemoLayout = () => {
+    const { loading } = useSelector((state: RootState) => (state.user));
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
@@ -18,7 +18,9 @@ export const Dashboard = () => {
         <>
             <Header/>
             <Aside/>
-            <Outlet/>
+            <main className="flex flex-col justify-center h-full text-center items-center pt-[60px] pl-[240px]">
+                <Outlet/>
+            </main>
         </>
         )
     )

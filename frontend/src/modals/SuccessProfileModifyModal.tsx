@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from "react";
+import React, {useEffect, Fragment, useState} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {Dialog, Transition } from "@headlessui/react";
 /** 폼항목 */
@@ -13,7 +13,7 @@ export const SuccessProfileModifyModal = () => {
         if (searchParams.get("modal") === "success-profileModify") {
             searchParams.delete('modal');
             setSearchParams(searchParams);
-            navigate('/dashboard/profile');
+            navigate('/memo/profile');
         }
     };
 
