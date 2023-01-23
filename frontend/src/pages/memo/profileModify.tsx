@@ -3,7 +3,6 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useForm} from "react-hook-form";
 import {Api} from "../../utile/api";
-import {useSearchParams} from "react-router-dom";
 import {SuccessProfileModifyModal} from "../../modals/SuccessProfileModifyModal";
 import {FuncButton} from "../../components/funcBtn";
 
@@ -14,12 +13,6 @@ export const ProfileModify = () => {
         password?: string | '';
         passwordConfirm?: string | '';
         mobile: string;
-    };
-
-    const [searchParams, setSearchParams] = useSearchParams();
-    const setRouterQuery = (key: string, value:string) => {
-        searchParams.set(key, value);
-        setSearchParams(searchParams);
     };
 
     const [PwShow, setPwShow] = useState(false);
@@ -51,10 +44,6 @@ export const ProfileModify = () => {
         reset();
     }, [reset, userState]);
 
-    useEffect(() => {
-        setOccurError('');
-    }, [searchParams]);
-
     /** submit */
     const onSubmit = handleSubmit(async () => {
         console.log('서브밋~!!')
@@ -70,7 +59,7 @@ export const ProfileModify = () => {
             .then((res) => {
                 console.log(res.data);
                 if (res.data.success) {
-                    setRouterQuery("modal","success-profileModify");
+                    setOccurError('');
                 } else {
                     setOccurError(res.data.error);
                 }
@@ -182,7 +171,7 @@ export const ProfileModify = () => {
                     />
                 </div>
             </form>
-            <SuccessProfileModifyModal/>
+            {/*<SuccessProfileModifyModal/>*/}
         </>
         )
     )

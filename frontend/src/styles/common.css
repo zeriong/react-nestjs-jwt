@@ -37,6 +37,29 @@ input, input:focus, input:active {
     outline-width: 0;
 }
 
+.text-line-1 {
+    text-shadow:
+    -1px 0 #000,
+    0 1px #000,
+    1px 0 #000,
+    0 -1px #000;
+}
+
+.text-line-2 {
+    text-shadow:
+    -2px 0 #000,
+    0 2px #000,
+    2px 0 #000,
+    0 -2px #000;
+}
+.text-line-3 {
+    text-shadow:
+    -3px 0 #000,
+    0 3px #000,
+    3px 0 #000,
+    0 -3px #000;
+}
+
 progress{
     @apply appearance-none;
 }

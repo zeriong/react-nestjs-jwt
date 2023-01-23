@@ -7,6 +7,12 @@ import {PrivateElement} from "./privateElement";
 import {Profile} from "../pages/memo/profile";
 import {MemoMain} from "../pages/memo";
 import {HomeLayout} from "../layout/intro";
+import {Service} from "../pages/intro/service";
+import {Guide} from "../pages/intro/guide";
+import {PayNotice} from "../pages/intro/paymentNotice";
+import {UserExp} from "../pages/intro/userExperience";
+import {Notice} from "../pages/intro/notice";
+import MemoInfoModal from "../modals/MemoInfoModal";
 
 export const Index = ()=> {
     return (
@@ -14,6 +20,12 @@ export const Index = ()=> {
             <Routes>
                 <Route path="/" element={<HomeLayout/>}>
                     <Route index element={<Home/>}/>
+                    <Route path="service" element={<Service/>}/>
+                    <Route path="guide" element={<Guide/>}/>
+                    <Route path="userExp" element={<UserExp/>}/>
+                    <Route path="payNotice" element={<PayNotice/>}/>
+                    <Route path="notice" element={<Notice/>}/>
+                    <Route path="e" element={<MemoInfoModal/>}/>
                 </Route>
 
                 <Route path="/memo/*" element={<PrivateElement><MemoLayout/></PrivateElement>}>

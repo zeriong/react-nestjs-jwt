@@ -1,13 +1,19 @@
-import React, {Fragment, SetStateAction, useEffect, useState} from "react";
+import React, {useEffect, Fragment, useState} from "react";
+import {useSearchParams} from "react-router-dom";
 import {Dialog, Transition } from "@headlessui/react";
+import {BsFillGearFill} from "@react-icons/all-files/bs/BsFillGearFill";
 
-export const SuccessProfileModifyModal = () => {
+export const ConfigModal = () => {
     const [isShow, setIsShow] = useState(false);
 
     return (
         <>
+            <BsFillGearFill
+                className="cursor-pointer" size="30" color="#f97316"
+                onClick={() => setIsShow(true)}
+            />
             <Transition appear show={isShow} as={Fragment}>
-                <Dialog as="div" className="relative z-20" onClose={()=>setIsShow(false)}>
+                <Dialog as="div" className="relative z-20" onClose={() => setIsShow(false)}>
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -31,16 +37,17 @@ export const SuccessProfileModifyModal = () => {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <Dialog.Panel className="w-full max-w-sm transform overflow-hidden rounded-lg bg-white p-6 md:p-8 text-left align-middle shadow-xl transition-all">
-                                    <div className="text-2xl mb-5">
-                                        회원정보 수정완료!
+                                    <div className="text-2xl mb-5 text-center font-bold">
+                                        환경설정
                                     </div>
-                                    <div className="mb-6">
-                                        수정된 프로필로 이동합니다.
+                                    <div className="mb-6 text-lg font-bold text-center">
+                                        환경설정 영역
                                     </div>
                                     <div className="w-[160px] flex justify-center cursor-pointer
                                     rounded-2xl p-1 bg-orange-500 text-white m-auto"
-                                         onClick={()=>!isShow}>
-                                        확인
+                                         onClick={() => setIsShow(false)}
+                                    >
+                                        저장
                                     </div>
                                 </Dialog.Panel>
                             </Transition.Child>

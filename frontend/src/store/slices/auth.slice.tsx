@@ -51,7 +51,7 @@ export const sendRefreshAccessToken = createAsyncThunk(
     }
 );
 
-const authSlice = createSlice({
+export const authSlice = createSlice({
     name: 'auth',
     initialState: initAuthState,
     reducers: {
@@ -91,5 +91,3 @@ const authSlice = createSlice({
 })
 
 export const { SET_LOGIN, SET_LOGOUT } = authSlice.actions;
-
-export default authSlice.reducer;

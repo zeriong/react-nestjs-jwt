@@ -38,7 +38,7 @@ export const sendMyProfile = createAsyncThunk(
     }
 );
 
-const userSlice = createSlice({
+export const userSlice = createSlice({
     name: 'user',
     initialState: initUserState,
     reducers: {
@@ -62,5 +62,3 @@ const userSlice = createSlice({
 });
 
 export const { SET_USER } = userSlice.actions;
-
-export default userSlice.reducer;
