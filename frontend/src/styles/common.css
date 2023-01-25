@@ -37,6 +37,18 @@ input, input:focus, input:active {
     outline-width: 0;
 }
 
+.custom-scroll::-webkit-scrollbar{
+    width: 8px;
+}
+.custom-scroll::-webkit-scrollbar-thumb{
+    height: 50%;
+    background-color: #cccccc;
+    border-radius: 8px;
+}
+.custom-scroll::-webkit-scrollbar-track{
+    background-color: transparent;
+}
+
 .text-line-1 {
     text-shadow:
     -1px 0 #000,

@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useForm} from "react-hook-form";
 import {Api} from "../../utile/api";
-import {SuccessProfileModifyModal} from "../../modals/SuccessProfileModifyModal";
 import {FuncButton} from "../../components/funcBtn";
+
 
 export const ProfileModify = () => {
     type FormData = {
@@ -20,6 +20,7 @@ export const ProfileModify = () => {
     const [occurError, setOccurError] = useState('');
 
     const { data: userState, loading } = useSelector((state: RootState) => (state.user));
+    const dispatch = useDispatch();
 
     const {
         setValue,
@@ -59,7 +60,7 @@ export const ProfileModify = () => {
             .then((res) => {
                 console.log(res.data);
                 if (res.data.success) {
-                    setOccurError('');
+
                 } else {
                     setOccurError(res.data.error);
                 }
@@ -172,6 +173,7 @@ export const ProfileModify = () => {
                 </div>
             </form>
             {/*<SuccessProfileModifyModal/>*/}
+
         </>
         )
     )

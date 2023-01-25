@@ -1,4 +1,4 @@
-import React, {useEffect, Fragment, useState} from "react";
+import React, {useEffect, Fragment, useState, useRef} from "react";
 import {useSearchParams} from "react-router-dom";
 import {Dialog, Transition } from "@headlessui/react";
 import {BsFillGearFill} from "@react-icons/all-files/bs/BsFillGearFill";
@@ -8,10 +8,17 @@ export const ConfigModal = () => {
 
     return (
         <>
-            <BsFillGearFill
-                className="cursor-pointer" size="30" color="#f97316"
-                onClick={() => setIsShow(true)}
-            />
+            <div className="flex w-full justify-center cursor-pointer h-[54px] items-center rounded-lg
+                        hover:bg-orange-50 ease-in-out duration-300 hover:border-orange-200 hover:border-2"
+                 onClick={ () => { setIsShow(true) } }
+            >
+                <section className="flex ease-in-out duration-300 hover:scale-110 h-full w-full justify-center items-center">
+                    <BsFillGearFill
+                        className="cursor-pointer" size="30" color="#f97316"
+                    />
+                    <span className="ml-3">환경설정</span>
+                </section>
+            </div>
             <Transition appear show={isShow} as={Fragment}>
                 <Dialog as="div" className="relative z-20" onClose={() => setIsShow(false)}>
                     <Transition.Child

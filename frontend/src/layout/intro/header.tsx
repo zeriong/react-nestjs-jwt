@@ -41,7 +41,7 @@ export const Header = ()=> {
     }
 
     return (
-        <header className="flex justify-between max-lg:h-12 max-lg:px-5 items-center px-10 py-3 border-b-2 whitespace-nowrap
+        <header className="flex justify-between max-lg:h-12 max-lg:px-5 items-center px-10 py-3 border-b border-gray-300 whitespace-nowrap
             fixed bg-white w-full z-30">
             <section
                 className={

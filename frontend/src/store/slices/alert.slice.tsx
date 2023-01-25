@@ -1,26 +1,32 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-export interface AuthState {
-    type: string,
-    message: string,
+export interface IAlertObject {
+    type?: string
+    message?: string
 }
 
-const initAuthState: AuthState = {
-    type: "",
-    message: "",
+export interface INotificationState {
+    alerts: Array<IAlertObject>,
+}
+
+const initNotificationState: INotificationState = {
+    alerts: [],
 }
 
 export const alertSlice = createSlice({
     name: 'alert',
-    initialState: initAuthState,
+    initialState: initNotificationState,
     reducers: {
-        SET_TYPE: (state: AuthState, action: PayloadAction<string>) => {
-            state.type = action.payload
+        SET_ALERT: (state: INotificationState, action: PayloadAction<IAlertObject>) => {
+            state.alerts.push({
+                message: action.payload.message,
+                type: action.payload.type,
+            });
         },
-        SET_MESSAGE: (state: AuthState, action: PayloadAction<string>) => {
-            state.message = action.payload;
+        DELETE_ALERT: (state:INotificationState) => {
+            state.alerts.shift();
         },
     },
 })
 
-export const { SET_TYPE, SET_MESSAGE } = alertSlice.actions;
+export const { SET_ALERT, DELETE_ALERT } = alertSlice.actions;
