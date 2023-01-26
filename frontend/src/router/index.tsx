@@ -12,7 +12,7 @@ import {Guide} from "../pages/intro/guide";
 import {PayNotice} from "../pages/intro/paymentNotice";
 import {UserExp} from "../pages/intro/userExperience";
 import {Notice} from "../pages/intro/notice";
-import MemoInfoModal from "../modals/MemoInfoModal";
+import MemoInfoPopov from "../popovers/MemoInfoPopov";
 
 export const Index = ()=> {
     return (
@@ -25,7 +25,7 @@ export const Index = ()=> {
                     <Route path="userExp" element={<UserExp/>}/>
                     <Route path="payNotice" element={<PayNotice/>}/>
                     <Route path="notice" element={<Notice/>}/>
-                    <Route path="e" element={<MemoInfoModal/>}/>
+                    <Route path="e" element={<MemoInfoPopov/>}/>
                 </Route>
 
                 <Route path="/memo/*" element={<PrivateElement><MemoLayout/></PrivateElement>}>

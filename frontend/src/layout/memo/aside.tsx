@@ -10,6 +10,26 @@ import {GiHamburgerMenu} from "@react-icons/all-files/gi/GiHamburgerMenu";
 import {BiGridSmall} from "@react-icons/all-files/bi/BiGridSmall";
 import {MdLabelImportant} from "react-icons/md";
 import {CiMemoPad} from "react-icons/ci";
+import {CheckList} from "./checkList";
+
+const MemoButton = (props: { label: string }) => {
+    const [onMouseMemos, setOnMouseMemos] = useState<boolean>(false);
+
+    return (
+        <button
+            onMouseEnter={() => setOnMouseMemos(true)}
+            onMouseLeave={() => setOnMouseMemos(false)}
+            className={`${onMouseMemos ? "font-bold border-orange-400" : "font-normal border-gray-200"}
+                                    relative flex justify-center items-center bg-transparent border-l-2 h-10 overflow-hidden transition-all duration-200`}
+        >
+            <div
+                className={`${onMouseMemos ? "left-0" : "-left-[240px]"}
+                                        relative h-full w-full bg-orange-100  transition-all duration-200`}
+            />
+            <span className="absolute text-ellipsis whitespace-nowrap overflow-hidden w-[200px] text-start pl-4">{props.label}</span>
+        </button>
+    )
+}
 
 export const Aside = () => {
     const dispatch = useDispatch();
@@ -38,12 +58,6 @@ export const Aside = () => {
     const [onMouseImportant, setOnMouseImportant] = useState(false);
     const [onMouseAllShow, setOnMouseAllShow] = useState(false);
 
-    /** 예시로 해두었지만 실제론 map을 통해서 반복 */
-    const [onMouseMemos, setOnMouseMemos] = useState(false);
-    const [onMouseMemos1, setOnMouseMemos1] = useState(false);
-    const [onMouseMemos2, setOnMouseMemos2] = useState(false);
-    const [onMouseMemos3, setOnMouseMemos3] = useState(false);
-
     return (
         <>
             <section
@@ -52,10 +66,10 @@ export const Aside = () => {
                 onClick={toggleMenu}
             />
             <nav
-                className={`${showMenu ? "left-0" : "-left-full"}
-            fixed w-[300px] bg-white z-20 ease-in-out duration-300 left-0 pt-[60px] shadow-xl shadow-gray-300 h-full overflow-auto`}
+                className={`${showMenu ? "left-0" : "-left-asideWidth"}
+            fixed w-asideWidth bg-white z-20 ease-in-out duration-300 left-0 pt-headerHeight shadow-xl shadow-gray-300 h-full overflow-auto scroll-hidden`}
             >
-                <div className="flex flex-col h-full w-full py-8 min-h-[520px]">
+                <div className="flex flex-col h-full w-full py-8 min-h-[820px]">
                     <div className="flex flex-col h-full justify-center text-center px-5 text-xl font-bold text-gray-800 tracking-wider">
                         <Link
                             to="/memo"
@@ -81,66 +95,24 @@ export const Aside = () => {
                             />
                             <span>중요메모</span>
                         </Link>
-                        <div className="flex flex-col grow py-3 w-auto bg-white mt-5 py-5">
+                        <div className="flex flex-col grow w-auto bg-white pb-5">
                             <div
-                                className="flex justify-start items-center w-full rounded-lg mb-2 text-lg transition-all duration-150 h-auto pl-2"
+                                className="flex justify-start items-center w-full rounded-lg text-lg transition-all duration-150 h-[50px] pl-2 cursor-default"
                             >
                                 <CiMemoPad
                                     size="30"
                                     className="fill-orange-600 ml-[1px] mr-3"/>
                                 <span>메모</span>
                             </div>
-                            <div className="flex flex-col g-white rounded-lg my-2 h-20 overflow-y-scroll custom-scroll font-normal grow pl-4">
-                                <button
-                                    onMouseEnter={() => setOnMouseMemos(true)}
-                                    onMouseLeave={() => setOnMouseMemos(false)}
-                                    className={`${onMouseMemos ? "font-bold border-orange-400" : "font-normal border-orange-200"}
-                                    relative flex justify-center items-center bg-transparent border-l-4 h-10 overflow-hidden transition-all duration-200`}
-                                >
-                                    <div
-                                        className={`${onMouseMemos ? "left-0" : "-left-[240px]"}
-                                        relative h-full w-full bg-orange-100  transition-all duration-200`}
-                                    />
-                                    <span className="absolute text-ellipsis whitespace-nowrap overflow-hidden w-[200px]">가족 및 친구 생일</span>
-                                </button>
-                                <button
-                                    onMouseEnter={() => setOnMouseMemos1(true)}
-                                    onMouseLeave={() => setOnMouseMemos1(false)}
-                                    className={`${onMouseMemos1 ? "font-bold border-orange-400" : "font-normal border-orange-200"}
-                                    relative flex justify-center items-center bg-transparent border-l-4 h-10 overflow-hidden transition-all duration-200`}
-                                >
-                                    <div
-                                        className={`${onMouseMemos1 ? "left-0" : "-left-[240px]"}
-                                        relative h-full w-full bg-orange-100  transition-all duration-200`}
-                                    />
-                                    <span className="absolute text-ellipsis whitespace-nowrap overflow-hidden w-[200px]">요리 레시피</span>
-                                </button>
-                                <button
-                                    onMouseEnter={() => setOnMouseMemos2(true)}
-                                    onMouseLeave={() => setOnMouseMemos2(false)}
-                                    className={`${onMouseMemos2 ? "font-bold border-orange-400" : "font-normal border-orange-200"}
-                                    relative flex justify-center items-center bg-transparent border-l-4 h-10 overflow-hidden transition-all duration-200`}
-                                >
-                                    <div
-                                        className={`${onMouseMemos2 ? "left-0" : "-left-[240px]"}
-                                        relative h-full w-full bg-orange-100  transition-all duration-200`}
-                                    />
-                                    <span className="absolute text-ellipsis whitespace-nowrap overflow-hidden w-[200px]">이런저런 메모</span>
-                                </button>
-                                <button
-                                    onMouseEnter={() => setOnMouseMemos3(true)}
-                                    onMouseLeave={() => setOnMouseMemos3(false)}
-                                    className={`${onMouseMemos3 ? "font-bold border-orange-400" : "font-normal border-orange-200"}
-                                    relative flex justify-center items-center bg-transparent border-l-4 h-10 overflow-hidden transition-all duration-200`}
-                                >
-                                    <div
-                                        className={`${onMouseMemos3 ? "left-0" : "-left-[240px]"}
-                                        relative h-full w-full bg-orange-100  transition-all duration-200`}
-                                    />
-                                    <span className="absolute text-ellipsis whitespace-nowrap overflow-hidden w-[200px]">이메일 메모 google@google.com</span>
-                                </button>
+                            <div className="flex flex-col g-white rounded-lg my-2 h-20 overflow-y-scroll custom-scroll font-normal grow pl-[21px]">
+                                <MemoButton label={"메모 라벨"} />
+                                <MemoButton label={"읽을 책 메모"} />
+                                <MemoButton label={"이메일 메모"} />
+                                <MemoButton label={"전화번호 저장소"} />
+                                <MemoButton label={"요리 레시피"} />
                             </div>
                         </div>
+                        <CheckList/>
                         <button
                             className="fixed bg-black text-white bottom-0 right-0 p-2"
                             type="button"
@@ -153,18 +125,8 @@ export const Aside = () => {
                                 }
                             }
                         >
-                            test button
+                            알림 테스트
                         </button>
-                        <ConfigModal/>
-                        <div
-                            className="flex w-full relative justify-center cursor-pointer h-[54px]
-                            items-center rounded-lg mt-5 bg-orange-500 text-white font-medium
-                            hover:bg-orange-50 ease-in-out duration-300 hover:border-orange-200 hover:border-4
-                            hover:text-orange-600 hover:font-extrabold"
-                            onClick={toggleMenu}
-                        >
-                            메뉴 숨기기
-                        </div>
                     </div>
                 </div>
             </nav>

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import MemoInfoModal from "../../modals/MemoInfoModal";
+import MemoInfoPopov from "../../popovers/MemoInfoPopov";
 import {useDispatch, useSelector} from "react-redux";
 import {BiPencil} from "@react-icons/all-files/bi/BiPencil";
 import {Link} from "react-router-dom";
@@ -41,7 +41,7 @@ export const Header = () => {
                         />
                     </Link>
                     <div className="absolute right-3">
-                        <MemoInfoModal/>
+                        <MemoInfoPopov/>
                     </div>
                 </div>
             </header>

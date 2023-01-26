@@ -3,24 +3,24 @@ import { Popover, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import {FaUserCircle} from "@react-icons/all-files/fa/FaUserCircle";
 import {BiChevronDown} from "@react-icons/all-files/bi/BiChevronDown";
-import {GrLogout} from "@react-icons/all-files/gr/GrLogout";
-import {FaRegIdCard} from "@react-icons/all-files/fa/FaRegIdCard";
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {RootState} from "../store";
+import {BsFillTrashFill} from "@react-icons/all-files/bs/BsFillTrashFill";
+import {AiFillEdit} from "@react-icons/all-files/ai/AiFillEdit";
 
 const solutions = [
     {
-        name: '나의 회원정보',
-        icon: FaRegIdCard,
+        name: '수정하기',
+        icon: AiFillEdit,
     },
     {
-        name: '로그아웃',
-        icon: GrLogout,
+        name: '삭제하기',
+        icon: BsFillTrashFill,
     },
 ]
 
-export default function MemoInfoModal() {
+export default function CheckListOptionPopov() {
     const { data: { name } } = useSelector((state: RootState) => (state.user));
 
     return (
@@ -52,7 +52,7 @@ export default function MemoInfoModal() {
                             <Popover.Panel className="absolute z-10 mt-3 w-[180px] right-0 px-0 lg:max-w-lg max-md:w-[160px]">
                                 <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                                     <div className="relative bg-white p-3">
-                                        <div className="text-lg font-medium text-gray-900 p-1 mb-1">
+                                        <div className="text-lg font-medium text-gray-900 p-1 mb-1 cursor-default">
                                             {`${name}님 😊`}
                                         </div>
                                         {solutions.map((item) => (

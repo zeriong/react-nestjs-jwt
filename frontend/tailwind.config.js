@@ -23,6 +23,10 @@ module.exports = {
       height: {
         'signUpLayout': '360px',
       },
+      spacing: {
+        'asideWidth': '300px',
+        'headerHeight': '60px',
+      },
     },
   },
   plugins: [],

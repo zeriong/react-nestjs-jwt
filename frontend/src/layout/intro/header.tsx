@@ -63,7 +63,7 @@ export const Header = ()=> {
                     {
                         isLoggedIn ? (
                             <>
-                                <Link to='memo' className="flex ml-3 w-full text-orange-700 hover:scale-110 ease-in-out duration-150 p-1 hover:text-orange-900">
+                                <Link to='memo' className="flex ml-3 w-full text-orange-700 hover:scale-110 ease-in-out duration-150 py-1 px-2 hover:text-orange-900">
                                     Let's Keep!
                                 </Link>
                                 <button
@@ -122,8 +122,10 @@ export const Header = ()=> {
                 isLoggedIn ? (
                     <section className="max-lg:hidden flex flex-row items-center">
                         <div className='text-[20px] font-bold text-gray-600 mr-4'>{`${name}님`}</div>
-                        <Link to='memo' className="w-[100px] flex justify-center cursor-pointer
-                            rounded-2xl p-1 bg-orange-500 text-white mr-3" >Let's Keep!</Link>
+                        <Link to='memo' className="w-auto flex justify-center cursor-pointer
+                            rounded-2xl py-1 px-5 bg-orange-500 text-white mr-3" >
+                            Let's Keep!
+                        </Link>
                         <button
                             type="button"
                             className="w-[100px] flex justify-center cursor-pointer
