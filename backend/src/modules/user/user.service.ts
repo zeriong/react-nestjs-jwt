@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../entities/user.entity';
@@ -8,7 +8,6 @@ import { CoreOutput } from '../../common/dtos/coreOutput.dto';
 import * as Validator from 'class-validator';
 import { UserDataOutput } from './dtos/userData.dto';
 import { UpdateAccountDto } from './dtos/updateAccount.dto';
-import { ApiProperty } from "@nestjs/swagger";
 
 /** 실질적인 서비스 구현 */
 @Injectable()
@@ -45,7 +44,10 @@ export class UserService {
       return { success: false, error: '계정생성에 실패했습니다.' };
     }
   }
-  async validate(email: string, password: string): Promise<UserDataOutput> {
+  async logInValidate(
+    email: string,
+    password: string,
+  ): Promise<UserDataOutput> {
     try {
       let user: User = null;
       //이메일 유효성 검사
@@ -124,7 +126,11 @@ export class UserService {
       });
 
       if (thisEmail != updateData.email && emailExists) {
-        return { success: false, error: '중복된 이메일입니다.', target: 'email' };
+        return {
+          success: false,
+          error: '중복된 이메일입니다.',
+          target: 'email',
+        };
       }
       if (thisEmail != updateData.email && mobileExists) {
         return { success: false, error: '중복된 휴대폰입니다.' };

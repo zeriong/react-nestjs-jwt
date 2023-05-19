@@ -47,7 +47,7 @@ export const Home = ()=> {
                                     {`어서오세요! ${name}님`}
                                 </div>
                                 <Link to="memo" className="text-[30px] font-bold flex py-2 px-5 items-center bg-orange-500
-                                 rounded-2xl justify-center mt-8 cursor-pointer text-white">
+                                rounded-2xl justify-center mt-8 cursor-pointer text-white">
                                     Let's Keep!
                                 </Link>
                             </div>
@@ -64,7 +64,7 @@ export const Home = ()=> {
                             ) : (
                                 <div className="flex flex-row text-[30px] mt-10">
                                     <span onClick={() => setRouterQuery("modal","sign-in")}
-                                          className="mt-5 w-[180px] py-2 flex justify-center border-[1px] border-gray-500
+                                          className="mt-5 w-[180px] py-2 flex justify-center border-[1px] border-gray-500 bg-white
                                           mb-3 cursor-pointer text-[22px] items-center mr-6 rounded-2xl">
                                         로그인하기
                                     </span>
@@ -73,14 +73,19 @@ export const Home = ()=> {
                                            items-center bg-orange-500 rounded-2xl text-white">
                                         회원가입
                                     </span>
-                                </div>)
+                                </div>
+                            )
                         }
                     </div>
                     <div
                         className="flex items-center w-1/2 max-md:fixed max-md:opacity-50 max-md:w-full
                         z-10 h-full font-bold text-[48px] text-gray-800 max-md:top-0"
                     >
-                        <img className="flex m-auto max-md:h-[400px] max-md:p-0 h-full w-auto p-10" src={memoImg} alt={''}/>
+                        <img
+                            className="flex m-auto max-md:h-[400px] max-md:p-0 h-full w-auto p-10"
+                            src={memoImg}
+                            alt={''}
+                        />
                     </div>
                 </div>
             <SuccessSignupModal/>

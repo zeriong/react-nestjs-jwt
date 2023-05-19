@@ -14,7 +14,6 @@ import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { UserDataOutput } from '../user/dtos/userData.dto';
 import { ConfigService } from '@nestjs/config';
 import { AccessTokenOutput } from './dtos/token.dto';
-import { UserProfile } from '../user/types/userProfile.type';
 import { CoreOutput } from '../../common/dtos/coreOutput.dto';
 
 @Injectable()
@@ -32,7 +31,7 @@ export class AuthService {
   ): Promise<LoginOutput> {
     try {
       // 계정, 비밀번호 검증
-      const validateUser: UserDataOutput = await this.userService.validate(
+      const validateUser: UserDataOutput = await this.userService.logInValidate(
         email,
         password,
       );
@@ -40,7 +39,7 @@ export class AuthService {
       if (validateUser.success && validateUser.user !== null) {
         // jwt 토큰 발급
         const accessPayload: AccessPayload = {
-          sub: validateUser.user.id, //validateUser = validate를통해서 user를 반환받았고 user에는 유저데이터 id가 있다. = validate{ user: { id } };
+          sub: validateUser.user.id, //validateUser = validate를통해서 user를 반환받았고 user에는 유저데이터 id가 있다. = logInValidate{ user: { id } };
         };
         const refreshPayload: RefreshPayload = {
           sub: validateUser.user.id,
